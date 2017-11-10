@@ -60,6 +60,10 @@ RUN mkdir /var/www/dumps
 
 RUN usermod -u 1000 www-data
 
+COPY laravel.conf /var/www/sites-available/laravel.conf
+RUN mkdir /var/www/laravel
+RUN chown -R www-data:www-data /var/www/laravel
+
 WORKDIR /var/www
 #CMD ["php-fpm"]
 CMD service ssh restart && php-fpm
