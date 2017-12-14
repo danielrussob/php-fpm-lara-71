@@ -2,7 +2,9 @@ FROM dnafactory/php-fpm-71
 
 RUN apt-get update -yqq && \
     apt-get -y install libxml2-dev php-soap && \
-    docker-php-ext-install soap
+    docker-php-ext-install soap \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove
 
 RUN pecl install xdebug && \
     docker-php-ext-enable xdebug
@@ -16,16 +18,22 @@ RUN docker-php-ext-install mysqli
 RUN apt-get update -yqq && \
     apt-get install -y zlib1g-dev libicu-dev g++ && \
     docker-php-ext-configure intl && \
-    docker-php-ext-install intl
+    docker-php-ext-install intl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove
 
 USER root
 RUN apt-get update -yqq && \
-        apt-get install -y --force-yes jpegoptim optipng pngquant gifsicle
+        apt-get install -y --force-yes jpegoptim optipng pngquant gifsicle \
+        && rm -rf /var/lib/apt/lists/* \
+        && apt-get purge -y --auto-remove
 
 RUN apt-get update -y && \
     apt-get install -y libmagickwand-dev imagemagick && \
     pecl install imagick && \
-    docker-php-ext-enable imagick
+    docker-php-ext-enable imagick \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove
 
 #
 #--------------------------------------------------------------------------
@@ -61,6 +69,7 @@ RUN mkdir /var/www/dumps
 RUN usermod -u 1000 www-data
 
 COPY laravel.conf /var/www/sites-available/laravel.conf
+RUN rm /var/www/sites-available/default.conf -Rf
 RUN mkdir /var/www/laravel
 RUN chown -R www-data:www-data /var/www/laravel
 
