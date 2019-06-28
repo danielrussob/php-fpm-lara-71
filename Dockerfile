@@ -6,7 +6,7 @@ RUN set -eux; \
         # Jessie's apt doesn't support [check-valid-until=no] so we have to use this instead
         apt-get -o Acquire::Check-Valid-Until=false update;
 
-RUN apt-get update -yqq && \
+RUN apt-get -o Acquire::Check-Valid-Until=false update -yqq && \
     apt-get -y install libxml2-dev php-soap && \
     docker-php-ext-install soap \
     && rm -rf /var/lib/apt/lists/* \
@@ -22,7 +22,7 @@ RUN docker-php-ext-install exif
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install pcntl
 
-RUN apt-get update -yqq && \
+RUN apt-get -o Acquire::Check-Valid-Until=false update -yqq && \
     apt-get install -y zlib1g-dev libicu-dev g++ && \
     docker-php-ext-configure intl && \
     docker-php-ext-install intl \
@@ -30,12 +30,12 @@ RUN apt-get update -yqq && \
     && apt-get purge -y --auto-remove
 
 USER root
-RUN apt-get update -yqq && \
+RUN apt-get -o Acquire::Check-Valid-Until=false update -yqq && \
         apt-get install -y --force-yes jpegoptim optipng pngquant gifsicle \
         && rm -rf /var/lib/apt/lists/* \
         && apt-get purge -y --auto-remove
 
-RUN apt-get update -y && \
+RUN apt-get -o Acquire::Check-Valid-Until=false update -y && \
     apt-get install -y libmagickwand-dev imagemagick cron supervisor && \
     pecl install imagick && \
     docker-php-ext-enable imagick \
@@ -48,7 +48,7 @@ RUN apt-get update -y && \
 #--------------------------------------------------------------------------
 #
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y \
     mysql-client \
     vim \
     telnet \
