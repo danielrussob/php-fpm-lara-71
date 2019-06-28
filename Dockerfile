@@ -14,6 +14,7 @@ RUN docker-php-ext-install zip
 RUN docker-php-ext-install bcmath
 RUN docker-php-ext-install exif
 RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install pcntl
 
 RUN apt-get update -yqq && \
     apt-get install -y zlib1g-dev libicu-dev g++ && \
@@ -29,7 +30,7 @@ RUN apt-get update -yqq && \
         && apt-get purge -y --auto-remove
 
 RUN apt-get update -y && \
-    apt-get install -y libmagickwand-dev imagemagick && \
+    apt-get install -y libmagickwand-dev imagemagick cron && \
     pecl install imagick && \
     docker-php-ext-enable imagick \
     && rm -rf /var/lib/apt/lists/* \
@@ -47,6 +48,7 @@ RUN apt-get update && apt-get install -y \
     telnet \
     netcat \
     git-core \
+    nano \
     zip \
 	openssh-client \
 	openssh-server \
