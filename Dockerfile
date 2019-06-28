@@ -1,5 +1,11 @@
 FROM dnafactory/php-fpm-71
 
+RUN echo "deb http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+RUN set -eux; \
+        # Jessie's apt doesn't support [check-valid-until=no] so we have to use this instead
+        apt-get -o Acquire::Check-Valid-Until=false update;
+
 RUN apt-get update -yqq && \
     apt-get -y install libxml2-dev php-soap && \
     docker-php-ext-install soap \
@@ -30,7 +36,7 @@ RUN apt-get update -yqq && \
         && apt-get purge -y --auto-remove
 
 RUN apt-get update -y && \
-    apt-get install -y libmagickwand-dev imagemagick cron && \
+    apt-get install -y libmagickwand-dev imagemagick cron supervisor && \
     pecl install imagick && \
     docker-php-ext-enable imagick \
     && rm -rf /var/lib/apt/lists/* \
